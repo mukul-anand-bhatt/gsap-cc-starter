@@ -1,5 +1,30 @@
+import { useEffect, useRef } from "react";  // Importing useEffect and useRef
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";  // Importing ScrollTrigger plugin
+
+gsap.registerPlugin(ScrollTrigger);  // Registering the ScrollTrigger plugin
+
 const GsapScrollTrigger = () => {
-  // TODO: Implement the gsap scroll trigger
+  const scrollRef = useRef(null);  // Creating a ref for the scroll container
+
+  useEffect(() => {
+    const boxes = gsap.utils.toArray(scrollRef.current.children);  // Getting the children of scrollRef
+    boxes.forEach((box) => {
+      gsap.to(box, {
+        x: 150 * (boxes.indexOf(box)+5),
+        rotation: 360,
+        borderRadius: '100%',
+        scale: 1.5,
+        scrollTrigger: {
+          trigger: box,
+          start: 'bottom bottom',
+          end: 'top 10%',
+          scrub: true,
+        },
+        ease: 'power1.inOut',
+      });
+    });
+  }, []);  // Adding an empty dependency array so the effect runs once when the component mounts
 
   return (
     <main>
@@ -20,7 +45,7 @@ const GsapScrollTrigger = () => {
       <p className="mt-5 text-gray-500">
         Read more about the{" "}
         <a
-          href="https://gsap.com/docs/v3/Plugins/ScrollTrigger/"
+          href="https://greensock.com/docs/v3/Plugins/ScrollTrigger/"
           target="_blank"
           rel="noreferrer noopener nofollow"
         >
@@ -51,7 +76,7 @@ const GsapScrollTrigger = () => {
         </svg>
       </div>
 
-      <div className="mt-20 w-full h-screen">
+      <div ref={scrollRef} className="mt-20 w-full h-screen">
         <div
           id="scroll-pink"
           className="scroll-box w-20 h-20 rounded-lg bg-pink-500"
